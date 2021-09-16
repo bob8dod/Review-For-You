@@ -1,1 +1,1 @@
-# NLP project (Review Analysis) -> www.talkwith.shop (not ready)
+# NLP project (Review Analysis) -> 10/01/21 release!!
