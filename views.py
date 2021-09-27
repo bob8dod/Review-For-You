@@ -143,7 +143,6 @@ def change_name(tt):
 
     return result_text
 def text_to_pandas(text):
-    # line = [[r.split('|')[0], r.split('|')[1]] for r in text if len(r.split('|')) > 1]
     data = pd.DataFrame(text, columns=['score', 'review'])
     data = data.drop_duplicates(ignore_index=False).reset_index(drop=True)
     return data
@@ -151,8 +150,6 @@ def text_to_pandas(text):
 def preprocessing(review_data):
     for i in range(len(review_data)):
         review_data.loc[i, 'review'] = re.sub('[^0-9가-힣\s]', '', review_data.loc[i, 'review'])
-        # review_data.loc[i, 'review'] = re.sub(' ', np.nan, review_data.loc[i, 'review'])
-        # review_data.loc[i, 'review'] = spacing(review_data.loc[i, 'review'])
     review_data = review_data.dropna().reset_index(drop=True)
     return review_data
 def morphs_tokenizer(review_data):
@@ -164,11 +161,9 @@ def morphs_tokenizer(review_data):
             review_data_list.append(rev2)
     return review_data_list
 def morphs_pos(review_data):
-    # stopwords = ['이','가','으로','에게','에게서','에서','부터','까지','한테','께','와','과','을','를','의','로서','로']
     review_data_list = []
     for i in range(len(review_data)):
         rev = mecab.pos(review_data.loc[i, 'review'])  # mecab
-        # review_data_list.append([w for w in rev if w not in stopwords])
         review_data_list.append(rev)
     return review_data_list
 def return_nouns(review_data):
@@ -227,7 +222,7 @@ def return_keyword(review_data):
                 keyword_before.append(word_josa_count[i][0])
 
     # 유사어 처리 및 불용어 처리(상품명, 제품, 상품,. ...)
-    # 네이버 리뷰 20만개로 학습한 word2vec모델 load
+    # 네이버 리뷰 20만개 + 리뷰데이터 30만개로 학습한 word2vec모델 load
     meanless = ['상품', '제품']
     # meanless.extend(list(categories))
     similar_word = []
@@ -386,9 +381,6 @@ def similarity_and_major_similar_sentence(review_data, vocab_sorted, selected_re
     cosine_similarities_for_similarity = cosine_similarity(for_similarity, for_similarity)
     selected_line_with_similar_review_idx = [[i, r] for i, r in enumerate(cosine_similarities_for_similarity[-1])]
     result_sorted = sorted(selected_line_with_similar_review_idx, key=lambda x: x[1], reverse=True)
-    # print('[선택된 리뷰]')
-    # print(all_review_of_same_word[-1])
-    # print('----------------------------------')
     result_same_sentences = []
     for idx, _ in result_sorted[1:6]:
         result_same_sentences.append(all_review_of_same_word[idx])
@@ -445,9 +437,6 @@ def lets_do_crawling(product_num):
 
     result, keyword, vocab_sorted, review_data = result_of_code(text)
 
-    # result_of_each_review_keyword(text, keyword)
-    # result_of_selected_review_s_same_reviews(review_data, vocab_sorted)
-
     return tem_data, product_name, img_src, price, review_len, categories, result, keyword
 
 
@@ -492,14 +481,6 @@ def tweet(request):
             my_tweet.categories = categories
             my_tweet.save()
 
-            # for tag in tags:
-            #     tag = tag.strip()
-            #     if tag != '':
-            #         my_tweet.tags.add(tag)
-            # my_tweet = TweetModel()
-            # my_tweet.author = user
-            # my_tweet.content = request.POST.get('my-content', '')
-
             current_tweet = TweetModel.objects.get(content=content)
             ss = time.time()
             for i in range(len(tem_data)):
@@ -517,13 +498,7 @@ def tweet(request):
                 TC.morph = ' '.join(morph).strip()
                 TC.arr = ' '.join(map(str, num_arr)).strip()
                 TC.save()
-
-                # current_comment = TweetModel.objects.get(comment=review)
-                # for word in result_words:
-                #
-                #     CM = CommentKeyword()
-                #     CM.comment = current_comment
-                #     CM.keyword = word
+                
             ee = time.time()
             print('각 리뷰별 키워드,DNN 출력:', ee - ss)
 
