@@ -9,6 +9,7 @@ import time
 import pandas as pd
 import numpy as np
 from eunjeon import Mecab
+# from konlpy.tag import Mecab
 import gensim
 from sklearn.metrics.pairwise import cosine_similarity
 mecab = Mecab()
