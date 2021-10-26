@@ -43,7 +43,7 @@ def make_charts(data):
     plt.savefig("./static/image/bar_chart.png")
 
 
-    wc = WordCloud(font_path = '210Black.ttf',width=1000, height=600,
+    wc = WordCloud(font_path = 'static/210Black.ttf',width=1000, height=600,
                 background_color="#000000", random_state=0,mask = mask)
     plt.figure(figsize=(20,10),facecolor='#000000')
     plt.imshow(wc.generate_from_frequencies(data))
